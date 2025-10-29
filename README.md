@@ -195,12 +195,6 @@ FocusFlow/
 1. Click "Create New Session"
 2. Set your preferred work duration, break duration, and number of cycles
 3. Click "Create Session" to start
-4. Share the generated code with friends to collaborate
-
-### Joining a Session
-1. Click "Join Session"
-2. Enter the session code provided by the session creator
-3. Click "Join" to participate in the collaborative timer
 
 ### Using Background Music
 1. Click the music widget in the bottom right corner
