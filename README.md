@@ -118,8 +118,21 @@ Frontend starts on `http://localhost:3000`
 6. Authorized redirect URIs: `http://localhost:8080/login/oauth2/code/google`
 7. Copy the **Client ID** and **Client Secret**
 
-#### Alternative: Run Without OAuth
-The app works without Google authentication - you'll just see login buttons that don't function. All timer functionality works normally.
+#### 🎯 Demo Mode (No Setup Required)
+**FocusFlow automatically runs in DEMO MODE when OAuth credentials are not configured:**
+
+✅ **What Works:**
+- Full Pomodoro timer functionality
+- Session creation and management  
+- Collaborative session sharing via codes
+- Background music and themes
+- All UI features and settings
+
+❌ **What's Disabled:**
+- Google OAuth login (login buttons hidden)
+- User profiles and authentication
+
+**Perfect for:** Testing, development, or running without Google account integration.
 
 ## Project Structure
 

@@ -22,36 +22,52 @@ public class SecurityConfig {
 
     @Autowired(required = false)
     private OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService;
+    
+    @Autowired
+    private DemoModeConfig demoModeConfig;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        var httpSecurity = http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/login**", "/error", "/webjars/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/ws/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo -> {
-                    if (customOAuth2UserService != null) {
-                        userInfo.userService(customOAuth2UserService);
-                    }
-                })
-                .successHandler(authenticationSuccessHandler())
-                .failureUrl("/login?error=true")
-            )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-            )
+            .authorizeHttpRequests(authz -> {
+                if (demoModeConfig.isDemoMode()) {
+                    // Demo mode: Allow all requests without authentication
+                    authz.anyRequest().permitAll();
+                } else {
+                    // Normal mode: Require authentication for most endpoints
+                    authz
+                        .requestMatchers("/", "/login**", "/error", "/webjars/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/api/**").permitAll() // Allow API access in demo mode
+                        .anyRequest().authenticated();
+                }
+            })
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // For H2 console
+
+        // Only configure OAuth if not in demo mode
+        if (!demoModeConfig.isDemoMode()) {
+            httpSecurity
+                .oauth2Login(oauth2 -> oauth2
+                    .userInfoEndpoint(userInfo -> {
+                        if (customOAuth2UserService != null) {
+                            userInfo.userService(customOAuth2UserService);
+                        }
+                    })
+                    .successHandler(authenticationSuccessHandler())
+                    .failureUrl("/login?error=true")
+                )
+                .logout(logout -> logout
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                );
+        }
         
-        return http.build();
+        return httpSecurity.build();
     }
 
     @Bean
