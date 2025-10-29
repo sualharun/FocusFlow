@@ -53,58 +53,73 @@ A modern Pomodoro Timer application with collaborative sessions, background musi
 ## Quick Start
 
 ### Prerequisites
-- **Node.js** (version 14 or higher)
-- **Java** (version 11 or higher)
-- **Maven** (for building the backend)
+- **Node.js** (version 16 or higher)
+- **Java** (version 17 or higher)  
+- **Maven** (included via wrapper)
 
-### 1. Clone the Repository
+### 🚀 One-Command Setup
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/sualharun/FocusFlow.git
+cd FocusFlow
+./setup.sh
+```
+
+### 📱 Manual Setup
+
+#### 1. Clone & Install
+```bash
+git clone https://github.com/sualharun/FocusFlow.git
 cd FocusFlow
 ```
 
-### 2. Backend Setup
-
+#### 2. Environment Configuration (Optional)
 ```bash
-# Navigate to the project root
-cd /path/to/FocusFlow
+cp .env.example .env
+# Edit .env with your Google OAuth credentials (see OAuth setup section)
+```
 
-# Run the Spring Boot application
+#### 3. Run Backend
+```bash
 ./mvnw spring-boot:run
 ```
+Backend starts on `http://localhost:8080`
 
-The backend will start on `http://localhost:8080`
-
-### 3. Frontend Setup
-
+#### 4. Run Frontend (New Terminal)
 ```bash
-# Navigate to the frontend directory
 cd focusflow-frontend
-
-# Install dependencies
 npm install
-
-# Start the development server
 npm start
 ```
+Frontend starts on `http://localhost:3000`
 
-The frontend will start on `http://localhost:3000`
+### 4. Google OAuth Setup (Required for Authentication)
 
-### 4. Google OAuth Setup (Optional)
+**Note**: The app will run without OAuth, but Google login won't work until configured.
 
-To enable Google authentication:
+#### Quick Setup:
+1. **Environment Variables** (Recommended):
+   ```bash
+   export GOOGLE_CLIENT_ID="your-actual-client-id"
+   export GOOGLE_CLIENT_SECRET="your-actual-client-secret"
+   ```
 
+2. **Or create `.env` file** in project root:
+   ```
+   GOOGLE_CLIENT_ID=your-actual-client-id
+   GOOGLE_CLIENT_SECRET=your-actual-client-secret
+   ```
+
+#### Get Google OAuth Credentials:
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the Google+ API
-4. Create OAuth 2.0 credentials
-5. Add `http://localhost:8080` to authorized redirect URIs
-6. Update `application.properties` with your OAuth credentials:
+2. Create a new project or select existing one
+3. Enable **Google+ API** and **OAuth2 API**
+4. Go to **Credentials** → **Create Credentials** → **OAuth 2.0 Client IDs**
+5. Application type: **Web application**
+6. Authorized redirect URIs: `http://localhost:8080/login/oauth2/code/google`
+7. Copy the **Client ID** and **Client Secret**
 
-```properties
-spring.security.oauth2.client.registration.google.client-id=your-client-id
-spring.security.oauth2.client.registration.google.client-secret=your-client-secret
-```
+#### Alternative: Run Without OAuth
+The app works without Google authentication - you'll just see login buttons that don't function. All timer functionality works normally.
 
 ## Project Structure
 
