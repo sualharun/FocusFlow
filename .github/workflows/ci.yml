@@ -1,0 +1,60 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+        
+    - name: Run backend tests
+      run: ./mvnw clean test
+      
+    - name: Build backend
+      run: ./mvnw clean compile
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: focusflow-frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('focusflow-frontend/package-lock.json') }}
+        
+    - name: Install dependencies
+      run: |
+        cd focusflow-frontend
+        npm ci
+        
+    - name: Build frontend
+      run: |
+        cd focusflow-frontend
+        npm run build
