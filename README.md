@@ -33,6 +33,12 @@ A modern Pomodoro Timer application with collaborative sessions, background musi
 - Context-aware suggestions
 - Built-in best practices for time management
 
+### 🚀 Instant Demo Mode
+- One-click demo access without registration
+- Full feature testing with sample data
+- Perfect for portfolios and demonstrations
+- Automatic fallback when OAuth not configured
+
 ## Tech Stack
 
 ### Frontend
@@ -57,12 +63,14 @@ A modern Pomodoro Timer application with collaborative sessions, background musi
 - **Java** (version 17 or higher)  
 - **Maven** (included via wrapper)
 
-### 🚀 One-Command Setup
-```bash
-git clone https://github.com/sualharun/FocusFlow.git
-cd FocusFlow
-./setup.sh
-```
+### 🚀 Instant Demo (No Setup)
+1. **Try Online Demo:** Visit the app and click **"Try Demo Mode"**
+2. **Or Run Locally:**
+   ```bash
+   git clone https://github.com/sualharun/FocusFlow.git
+   cd FocusFlow
+   ./setup.sh
+   ```
 
 ### 📱 Manual Setup
 
@@ -119,20 +127,27 @@ Frontend starts on `http://localhost:3000`
 7. Copy the **Client ID** and **Client Secret**
 
 #### 🎯 Demo Mode (No Setup Required)
-**FocusFlow automatically runs in DEMO MODE when OAuth credentials are not configured:**
+**FocusFlow includes a built-in Demo Mode for instant testing:**
 
-✅ **What Works:**
-- Full Pomodoro timer functionality
-- Session creation and management  
-- Collaborative session sharing via codes
-- Background music and themes
-- All UI features and settings
+✅ **What Works in Demo Mode:**
+- Full Pomodoro timer functionality (25/5/15 minute cycles)
+- Session creation and management with progress tracking
+- Collaborative session sharing via unique session codes
+- Background music player (Lo-fi beats, rain sounds)  
+- Multiple visual themes and customizable settings
+- Productivity tips and activity logging
+- Real-time session synchronization
 
-❌ **What's Disabled:**
-- Google OAuth login (login buttons hidden)
-- User profiles and authentication
+❌ **What's Different:**
+- Uses demo user account (`demo@focusflow.app`) instead of Google login
+- No persistent user profiles (resets on restart)
+- Demo mode indicator in the interface
 
-**Perfect for:** Testing, development, or running without Google account integration.
+**Perfect for:** Portfolio demonstrations, testing, development, or running without Google account setup.
+
+**How to Access Demo Mode:**
+1. Click **"Try Demo Mode"** button on the login screen, OR
+2. Run the app normally (demo mode is automatic when OAuth isn't configured)
 
 ## Project Structure
 

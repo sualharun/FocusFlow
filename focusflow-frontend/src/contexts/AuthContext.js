@@ -75,6 +75,19 @@ export const AuthProvider = ({ children }) => {
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
+  const loginDemo = () => {
+    // Set demo mode authentication
+    const demoUser = {
+      id: 'demo-user',
+      name: 'Demo User',
+      email: 'demo@focusflow.app',
+      picture: null
+    };
+    setUser(demoUser);
+    setAuthenticated(true);
+    console.log('Demo mode activated');
+  };
+
   const logout = async () => {
     try {
       await fetch('http://localhost:8080/logout', {
@@ -94,6 +107,7 @@ export const AuthProvider = ({ children }) => {
     authenticated,
     loading,
     login,
+    loginDemo,
     logout,
     checkAuthStatus
   };

@@ -35,24 +35,38 @@ public class SessionController {
             @RequestBody CreateSessionRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
         
-        if (oauth2User == null) {
-            return ResponseEntity.status(401).build(); // Unauthorized
-        }
-        
         try {
-            // Get or create user from OAuth2 data
-            String email = oauth2User.getAttributes().get("email").toString();
-            User user = userRepository.findByEmail(email).orElseGet(() -> {
-                User newUser = new User();
-                newUser.setEmail(email);
-                newUser.setUsername(email);
-                newUser.setGoogleId(oauth2User.getAttributes().get("sub").toString());
-                newUser.setFirstName(oauth2User.getAttributes().get("given_name").toString());
-                newUser.setLastName(oauth2User.getAttributes().get("family_name").toString());
-                newUser.setProfilePictureUrl(oauth2User.getAttributes().get("picture").toString());
-                newUser.setAnonymous(false);
-                return userRepository.save(newUser);
-            });
+            User user;
+            
+            if (oauth2User == null) {
+                // Demo mode - create or get demo user
+                user = userRepository.findByEmail("demo@focusflow.app").orElseGet(() -> {
+                    User demoUser = new User();
+                    demoUser.setEmail("demo@focusflow.app");
+                    demoUser.setUsername("Demo User");
+                    demoUser.setGoogleId("demo-user-id");
+                    demoUser.setFirstName("Demo");
+                    demoUser.setLastName("User");
+                    demoUser.setProfilePictureUrl(null);
+                    demoUser.setAnonymous(true);
+                    System.out.println("Creating demo user for session");
+                    return userRepository.save(demoUser);
+                });
+            } else {
+                // OAuth mode - get or create user from OAuth2 data
+                String email = oauth2User.getAttributes().get("email").toString();
+                user = userRepository.findByEmail(email).orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setEmail(email);
+                    newUser.setUsername(email);
+                    newUser.setGoogleId(oauth2User.getAttributes().get("sub").toString());
+                    newUser.setFirstName(oauth2User.getAttributes().get("given_name").toString());
+                    newUser.setLastName(oauth2User.getAttributes().get("family_name").toString());
+                    newUser.setProfilePictureUrl(oauth2User.getAttributes().get("picture").toString());
+                    newUser.setAnonymous(false);
+                    return userRepository.save(newUser);
+                });
+            }
             
             Session session = sessionService.createSession(
                 user, 
@@ -62,7 +76,7 @@ public class SessionController {
                 request.getTotalCycles()
             );
             
-            System.out.println("Session created successfully for user: " + email);
+            System.out.println("Session created successfully for user: " + user.getEmail());
             return ResponseEntity.ok(session);
             
         } catch (Exception e) {
@@ -88,12 +102,17 @@ public class SessionController {
 
     @GetMapping("/history")
     public ResponseEntity<List<Session>> getSessionHistory(@AuthenticationPrincipal OAuth2User oauth2User) {
-        if (oauth2User == null) {
-            return ResponseEntity.status(401).build();
-        }
-
         try {
-            String email = oauth2User.getAttributes().get("email").toString();
+            String email;
+            
+            if (oauth2User == null) {
+                // Demo mode
+                email = "demo@focusflow.app";
+            } else {
+                // OAuth mode
+                email = oauth2User.getAttributes().get("email").toString();
+            }
+            
             Optional<User> userOpt = userRepository.findByEmail(email);
             
             if (userOpt.isEmpty()) {
