@@ -2,6 +2,8 @@
 
 A modern Pomodoro Timer application with collaborative sessions, background music, and productivity tracking. Built with React frontend and Spring Boot backend.
 
+*Last updated: February 2026*
+
 ## Features
 
 ### ⏰ Smart Pomodoro Timer
